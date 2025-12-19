@@ -1,1 +1,0 @@
-cargo:rustc-env=MIME_TYPES_GENERATED_PATH=/Users/mac/workspace/cool-rust/cool-rust-package/target/debug/build/mime-infer-cb30d82908d0f1fd/out/mime_types_generated.rs
