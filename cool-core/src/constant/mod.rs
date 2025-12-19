@@ -2,6 +2,10 @@
 //!
 //! 对应 TypeScript 版本的 `constant/global.ts`
 
+use std::str::FromStr;
+
+use crate::error::CoolError;
+
 /// 错误信息常量
 pub mod error_info {
     /// 没有实体
@@ -66,20 +70,26 @@ pub enum CrudType {
     List,
 }
 
-impl CrudType {
-    /// 从字符串解析
-    pub fn from_str(s: &str) -> Option<Self> {
+/// 实现 FromStr trait
+impl FromStr for CrudType {
+    type Err = CoolError;
+
+    /// 从字符串解析为 CrudType
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.to_lowercase().as_str() {
-            "add" => Some(Self::Add),
-            "delete" => Some(Self::Delete),
-            "update" => Some(Self::Update),
-            "page" => Some(Self::Page),
-            "info" => Some(Self::Info),
-            "list" => Some(Self::List),
-            _ => None,
+            "add" => Ok(Self::Add),
+            "delete" => Ok(Self::Delete),
+            "update" => Ok(Self::Update),
+            "page" => Ok(Self::Page),
+            "info" => Ok(Self::Info),
+            "list" => Ok(Self::List),
+            _ => Err(CoolError::validate(format!("无效的 CrudType: {}", s))),
         }
     }
+}
 
+// 独立 impl 块定义其他方法
+impl CrudType {
     /// 转换为字符串
     pub fn as_str(&self) -> &'static str {
         match self {

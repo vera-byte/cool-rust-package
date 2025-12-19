@@ -24,19 +24,10 @@ pub enum IsolationLevel {
 }
 
 /// 事务选项
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct TransactionOptions {
     /// 连接名称
     pub connection_name: Option<String>,
     /// 隔离级别
     pub isolation: Option<IsolationLevel>,
-}
-
-impl Default for TransactionOptions {
-    fn default() -> Self {
-        Self {
-            connection_name: None,
-            isolation: None,
-        }
-    }
 }

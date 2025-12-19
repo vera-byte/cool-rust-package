@@ -232,23 +232,20 @@ pub fn cool_entity(input: TokenStream) -> TokenStream {
         let ty = &field.ty;
         let ty_repr = quote!(#ty).to_string();
 
-        let type_str = if ty_repr.contains("String") {
-            "string"
-        } else if ty_repr.contains("i32")
-            || ty_repr.contains("i64")
-            || ty_repr.contains("u32")
-            || ty_repr.contains("u64")
-        {
-            "number"
-        } else if ty_repr.contains("Decimal") || ty_repr.contains("f32") || ty_repr.contains("f64")
-        {
-            "number"
-        } else if ty_repr.contains("bool") {
-            "boolean"
-        } else if ty_repr.contains("DateTime") || ty_repr.contains("NaiveDateTime") {
-            "datetime"
-        } else {
-            "string"
+        let type_str = match ty_repr {
+            s if s.contains("i32")
+                || s.contains("i64")
+                || s.contains("u32")
+                || s.contains("u64")
+                || s.contains("Decimal")
+                || s.contains("f32")
+                || s.contains("f64") =>
+            {
+                "number"
+            }
+            s if s.contains("bool") => "boolean",
+            s if s.contains("DateTime") || s.contains("NaiveDateTime") => "datetime",
+            _ => "string",
         };
 
         let prop_lit = syn::LitStr::new(&ident, proc_macro2::Span::call_site());

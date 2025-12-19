@@ -57,7 +57,7 @@ pub trait BaseService: Send + Sync {
         let values: Vec<sea_orm::Value> = columns
             .iter()
             .filter_map(|col| data.get(col))
-            .map(|v| json_to_sea_value(v))
+            .map(json_to_sea_value)
             .collect();
 
         let stmt = Statement::from_sql_and_values(self.db().get_database_backend(), &sql, values);
@@ -235,7 +235,7 @@ pub trait BaseService: Send + Sync {
         }
 
         // 构建 FROM + JOIN 子句
-        let mut from_sql = format!("{}", self.table_name());
+        let mut from_sql = self.table_name().to_string();
         for join in &option.joins {
             validate_identifier(&join.entity)?;
             validate_identifier(&join.alias)?;
@@ -403,7 +403,7 @@ pub trait BaseService: Send + Sync {
         };
 
         // 构建 FROM + JOIN 子句
-        let mut from_sql = format!("{}", self.table_name());
+        let mut from_sql = self.table_name().to_string();
         for join in &option.joins {
             validate_identifier(&join.entity)?;
             validate_identifier(&join.alias)?;
@@ -597,7 +597,7 @@ pub trait BaseService: Send + Sync {
         };
 
         // 构建 FROM + JOIN 子句
-        let mut from_sql = format!("{}", self.table_name());
+        let mut from_sql = self.table_name().to_string();
         for join in &option.joins {
             validate_identifier(&join.entity)?;
             validate_identifier(&join.alias)?;

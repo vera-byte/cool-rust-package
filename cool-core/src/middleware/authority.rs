@@ -104,12 +104,8 @@ impl Handler for AuthorityMiddleware {
 
         let token = match token {
             Some(t) => {
-                // 移除 "Bearer " 前缀
-                if t.starts_with("Bearer ") {
-                    t[7..].to_string()
-                } else {
-                    t
-                }
+                // 安全去掉 "Bearer " 前缀
+                t.strip_prefix("Bearer ").unwrap_or(&t).to_string()
             }
             None => {
                 res.status_code(StatusCode::UNAUTHORIZED);

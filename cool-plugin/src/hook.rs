@@ -70,7 +70,7 @@ impl HookManager {
     /// 注册钩子
     pub fn register<H: Hook + 'static>(&self, hook_name: &str, hook: H) {
         let mut hooks = self.hooks.write();
-        let list = hooks.entry(hook_name.to_string()).or_insert_with(Vec::new);
+        let list = hooks.entry(hook_name.to_string()).or_default();
         list.push(Arc::new(hook));
 
         // 按优先级排序

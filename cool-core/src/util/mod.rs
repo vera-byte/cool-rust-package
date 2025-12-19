@@ -27,10 +27,10 @@ pub fn md5<S: AsRef<[u8]>>(data: S) -> String {
 pub fn random_string(len: usize) -> String {
     use rand::Rng;
     const CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     (0..len)
         .map(|_| {
-            let idx = rng.gen_range(0..CHARSET.len());
+            let idx = rng.random_range(0..CHARSET.len());
             CHARSET[idx] as char
         })
         .collect()
@@ -39,8 +39,8 @@ pub fn random_string(len: usize) -> String {
 /// 生成随机数字字符串
 pub fn random_number_string(len: usize) -> String {
     use rand::Rng;
-    let mut rng = rand::thread_rng();
-    (0..len).map(|_| rng.gen_range(0..10).to_string()).collect()
+    let mut rng = rand::rng();
+    (0..len).map(|_| rng.random_range(0..10).to_string()).collect()
 }
 
 /// 驼峰转下划线

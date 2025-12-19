@@ -59,10 +59,7 @@ impl EventManager {
         });
 
         let mut handlers = self.handlers.write();
-        handlers
-            .entry(event.to_string())
-            .or_insert_with(Vec::new)
-            .push(handler);
+        handlers.entry(event.to_string()).or_default().push(handler);
     }
 
     /// 触发事件

@@ -53,15 +53,13 @@ impl crate::event::RpcEventHandler for TransactionEventHandler {
                     transaction_data.rpc_transaction_id
                 );
             }
+        } else if let Err(e) = manager.rollback(&transaction_data.rpc_transaction_id).await {
+            tracing::error!("回滚事务失败: {}", e);
         } else {
-            if let Err(e) = manager.rollback(&transaction_data.rpc_transaction_id).await {
-                tracing::error!("回滚事务失败: {}", e);
-            } else {
-                info!(
-                    "事务已回滚: transaction_id={}",
-                    transaction_data.rpc_transaction_id
-                );
-            }
+            info!(
+                "事务已回滚: transaction_id={}",
+                transaction_data.rpc_transaction_id
+            );
         }
     }
 

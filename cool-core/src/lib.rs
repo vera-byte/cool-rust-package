@@ -195,10 +195,7 @@ impl CoolApp {
         // 初始化所有模块
         if let Err(e) = self.modules.init_all() {
             tracing::error!("模块初始化失败: {}", e);
-            return Err(std::io::Error::new(
-                std::io::ErrorKind::Other,
-                e.to_string(),
-            ));
+            return Err(std::io::Error::other(e));
         }
 
         // 构建路由

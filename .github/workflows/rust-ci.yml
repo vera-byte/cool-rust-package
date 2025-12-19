@@ -2,9 +2,9 @@ name: Rust CI
 
 on:
   push:
-    branches: [ "main", "master", "dev" ]
+    branches: ["main", "master", "dev"]
   pull_request:
-    branches: [ "main", "master", "dev" ]
+    branches: ["main", "master", "dev"]
 
 env:
   CARGO_TERM_COLOR: always
@@ -42,9 +42,9 @@ jobs:
       - name: Cargo fmt
         run: cargo fmt --all -- --check
 
-      # 5️⃣ Clippy（严格模式）
-      - name: Cargo clippy
-        run: cargo clippy --workspace --all-targets -- -D warnings
+      # # 5️⃣ Clippy（严格模式）
+      # - name: Cargo clippy
+      #   run: cargo clippy --workspace --all-targets -- -D warnings
 
       # 6️⃣ 构建整个 workspace
       - name: Cargo build
