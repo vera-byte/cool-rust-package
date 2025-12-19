@@ -1,0 +1,37 @@
+[package]
+name = "cool-task"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "cool-admin Rust 任务队列"
+
+[dependencies]
+cool-core = { path = "../cool-core" }
+
+# 异步
+tokio.workspace = true
+async-trait.workspace = true
+
+# 序列化
+serde.workspace = true
+serde_json.workspace = true
+
+# Redis
+redis.workspace = true
+
+# 日志
+tracing.workspace = true
+
+# 错误处理
+thiserror.workspace = true
+anyhow.workspace = true
+
+# 工具
+chrono.workspace = true
+uuid.workspace = true
+parking_lot.workspace = true
+
+# Cron 表达式解析
+cron = "0.13"
+

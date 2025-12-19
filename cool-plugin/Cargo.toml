@@ -1,0 +1,44 @@
+[package]
+name = "cool-plugin"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "cool-admin Rust 插件系统"
+
+[dependencies]
+cool-core = { path = "../cool-core" }
+
+# 异步
+tokio.workspace = true
+async-trait.workspace = true
+
+# 序列化
+serde.workspace = true
+serde_json.workspace = true
+
+# 日志
+tracing.workspace = true
+
+# 错误处理
+thiserror.workspace = true
+anyhow.workspace = true
+
+# 工具
+parking_lot.workspace = true
+once_cell.workspace = true
+uuid.workspace = true
+chrono.workspace = true
+
+# 可选功能
+[features]
+default = []
+zip = ["dep:zip", "dep:base64"]
+
+[dependencies.zip]
+version = "0.6"
+optional = true
+
+[dependencies.base64]
+version = "0.21"
+optional = true

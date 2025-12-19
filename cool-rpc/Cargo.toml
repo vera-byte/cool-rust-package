@@ -1,0 +1,45 @@
+[package]
+name = "cool-rpc"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "cool-admin Rust RPC 微服务"
+
+[features]
+web = []
+
+[dependencies]
+cool-core = { path = "../cool-core" }
+
+# ORM（用于 RPC Service 数据库操作）
+sea-orm.workspace = true
+
+# 异步
+tokio.workspace = true
+async-trait.workspace = true
+
+# 序列化
+serde.workspace = true
+serde_json.workspace = true
+
+# Redis (用于服务发现和消息传递)
+redis.workspace = true
+
+# 日志
+tracing.workspace = true
+
+# 错误处理
+thiserror.workspace = true
+anyhow.workspace = true
+
+# 工具
+uuid.workspace = true
+parking_lot.workspace = true
+chrono.workspace = true
+rand.workspace = true
+once_cell.workspace = true
+
+# HTTP 客户端（用于 RPC 调用）
+reqwest = { version = "0.12", features = ["json"] }
+

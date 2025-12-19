@@ -1,0 +1,12 @@
+/Users/mac/workspace/cool-rust/cool-rust-package/target/debug/deps/async_lock-28db4938bf2cc869.d: /Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/lib.rs /Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/barrier.rs /Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/mutex.rs /Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/once_cell.rs /Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/rwlock.rs /Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/rwlock/futures.rs /Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/rwlock/raw.rs /Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/semaphore.rs
+
+/Users/mac/workspace/cool-rust/cool-rust-package/target/debug/deps/libasync_lock-28db4938bf2cc869.rmeta: /Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/lib.rs /Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/barrier.rs /Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/mutex.rs /Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/once_cell.rs /Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/rwlock.rs /Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/rwlock/futures.rs /Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/rwlock/raw.rs /Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/semaphore.rs
+
+/Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/lib.rs:
+/Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/barrier.rs:
+/Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/mutex.rs:
+/Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/once_cell.rs:
+/Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/rwlock.rs:
+/Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/rwlock/futures.rs:
+/Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/rwlock/raw.rs:
+/Users/mac/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/async-lock-3.4.1/src/semaphore.rs:

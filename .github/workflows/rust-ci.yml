@@ -1,0 +1,55 @@
+name: Rust CI
+
+on:
+  push:
+    branches: [ "main", "master", "dev" ]
+  pull_request:
+    branches: [ "main", "master", "dev" ]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  build-and-test:
+    name: Build & Test (workspace)
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ 拉取代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ 安装 Rust（稳定版）
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      # 3️⃣ 缓存 Cargo（非常重要，能快 5~10 倍）
+      - name: Cache cargo registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      # 4️⃣ Rust 格式检查
+      - name: Cargo fmt
+        run: cargo fmt --all -- --check
+
+      # 5️⃣ Clippy（严格模式）
+      - name: Cargo clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+      # 6️⃣ 构建整个 workspace
+      - name: Cargo build
+        run: cargo build --workspace --all-targets
+
+      # 7️⃣ 运行测试（不启用需要 DB 的 feature）
+      - name: Cargo test
+        run: cargo test --workspace
