@@ -31,13 +31,19 @@ pub struct ExceptionFilter;
 
 #[async_trait::async_trait]
 impl Handler for ExceptionFilter {
-    async fn handle(&self, req: &mut Request, depot: &mut Depot, res: &mut Response, ctrl: &mut FlowCtrl) {
+    async fn handle(
+        &self,
+        req: &mut Request,
+        depot: &mut Depot,
+        res: &mut Response,
+        ctrl: &mut FlowCtrl,
+    ) {
         // 先执行后续处理器
         ctrl.call_next(req, depot, res).await;
 
         // 获取状态码
         let status = res.status_code.unwrap_or(StatusCode::OK);
-        
+
         // 如果响应状态码是错误状态码，且还没有设置响应体，则统一格式化
         if status.is_client_error() || status.is_server_error() {
             // 检查是否已经有响应体
@@ -78,4 +84,3 @@ pub fn handle_error(err: &CoolError) -> ErrorResponse {
         message: err.to_string(),
     }
 }
-

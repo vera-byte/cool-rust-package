@@ -219,4 +219,3 @@ impl<T: Serialize> PageResult<T> {
         }
     }
 }
-

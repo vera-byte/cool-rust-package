@@ -30,7 +30,12 @@ impl<'a> IndexManager<'a> {
     }
 
     /// 创建索引
-    pub async fn create(&self, name: &str, mappings: Value, settings: Option<Value>) -> EsResult<()> {
+    pub async fn create(
+        &self,
+        name: &str,
+        mappings: Value,
+        settings: Option<Value>,
+    ) -> EsResult<()> {
         let mut body = serde_json::json!({
             "mappings": mappings
         });
@@ -92,4 +97,3 @@ impl<'a> IndexManager<'a> {
         Ok(())
     }
 }
-

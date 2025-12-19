@@ -66,7 +66,9 @@ impl CheckResult {
         match self {
             CheckResult::Incomplete => "插件信息不完整",
             CheckResult::Exists => "插件已存在，继续安装将覆盖",
-            CheckResult::HookExists => "已存在同名Hook插件，你可以继续安装，但是多个相同的Hook插件只能同时开启一个",
+            CheckResult::HookExists => {
+                "已存在同名Hook插件，你可以继续安装，但是多个相同的Hook插件只能同时开启一个"
+            }
             CheckResult::Ok => "检查通过",
         }
     }
@@ -109,9 +111,9 @@ impl PluginInstaller {
     /// 此方法需要 `zip` feature 启用，否则会返回错误
     #[cfg(feature = "zip")]
     pub fn extract_plugin_data(&self, zip_path: impl AsRef<Path>) -> InstallerResult<PluginData> {
-        use zip::ZipArchive;
         use std::fs::File;
         use std::io::Read;
+        use zip::ZipArchive;
 
         let file = File::open(zip_path.as_ref())?;
         let mut archive = ZipArchive::new(file)
@@ -119,11 +121,9 @@ impl PluginInstaller {
 
         // 辅助函数：从 ZIP 中读取文件内容
         let mut get_file_content = |entry_name: &str, encoding: &str| -> InstallerResult<String> {
-            let mut file = archive
-                .by_name(entry_name)
-                .map_err(|_| {
-                    InstallerError::IncompleteInfo(format!("文件 {} 不存在", entry_name))
-                })?;
+            let mut file = archive.by_name(entry_name).map_err(|_| {
+                InstallerError::IncompleteInfo(format!("文件 {} 不存在", entry_name))
+            })?;
 
             let mut buffer = Vec::new();
             file.read_to_end(&mut buffer)
@@ -157,8 +157,9 @@ impl PluginInstaller {
             .map_err(|_| InstallerError::IncompleteInfo("src/index.js 文件不存在".to_string()))?;
 
         // 读取 tsContent（TypeScript）
-        let ts_content = get_file_content("source/index.ts", "utf-8")
-            .map_err(|_| InstallerError::IncompleteInfo("source/index.ts 文件不存在".to_string()))?;
+        let ts_content = get_file_content("source/index.ts", "utf-8").map_err(|_| {
+            InstallerError::IncompleteInfo("source/index.ts 文件不存在".to_string())
+        })?;
 
         Ok(PluginData {
             plugin_json,
@@ -238,11 +239,7 @@ impl PluginInstaller {
     ///
     /// * `key_name` - 插件 key
     /// * `data` - 插件数据
-    pub fn save_plugin_data(
-        &self,
-        key_name: &str,
-        data: &PluginData,
-    ) -> InstallerResult<()> {
+    pub fn save_plugin_data(&self, key_name: &str, data: &PluginData) -> InstallerResult<()> {
         let file_path = self.get_plugin_path(key_name);
 
         // 确保目录存在
@@ -279,10 +276,7 @@ impl PluginInstaller {
     /// # 返回
     ///
     /// 返回插件数据（content 和 tsContent）
-    pub fn get_plugin_data(
-        &self,
-        key_name: &str,
-    ) -> InstallerResult<Option<serde_json::Value>> {
+    pub fn get_plugin_data(&self, key_name: &str) -> InstallerResult<Option<serde_json::Value>> {
         let file_path = self.get_plugin_path(key_name);
 
         if !file_path.exists() {
@@ -334,4 +328,3 @@ mod tests {
         assert_eq!(CheckResult::Exists.message(), "插件已存在，继续安装将覆盖");
     }
 }
-

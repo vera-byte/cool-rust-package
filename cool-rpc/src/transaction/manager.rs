@@ -159,4 +159,3 @@ static GLOBAL_TRANSACTION_MANAGER: OnceCell<RpcTransactionManager> = OnceCell::n
 pub fn global_transaction_manager() -> &'static RpcTransactionManager {
     GLOBAL_TRANSACTION_MANAGER.get_or_init(RpcTransactionManager::new)
 }
-

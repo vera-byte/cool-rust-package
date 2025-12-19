@@ -67,7 +67,12 @@ impl SearchBuilder {
     }
 
     /// Bool 查询
-    pub fn bool_query(mut self, must: Vec<Value>, should: Vec<Value>, must_not: Vec<Value>) -> Self {
+    pub fn bool_query(
+        mut self,
+        must: Vec<Value>,
+        should: Vec<Value>,
+        must_not: Vec<Value>,
+    ) -> Self {
         let mut bool_query = json!({});
         if !must.is_empty() {
             bool_query["must"] = json!(must);
@@ -197,8 +202,16 @@ pub fn parse_search_result(response: Value) -> SearchResult {
         .map(|arr| {
             arr.iter()
                 .map(|hit| SearchHit {
-                    index: hit.get("_index").and_then(|v| v.as_str()).unwrap_or("").to_string(),
-                    id: hit.get("_id").and_then(|v| v.as_str()).unwrap_or("").to_string(),
+                    index: hit
+                        .get("_index")
+                        .and_then(|v| v.as_str())
+                        .unwrap_or("")
+                        .to_string(),
+                    id: hit
+                        .get("_id")
+                        .and_then(|v| v.as_str())
+                        .unwrap_or("")
+                        .to_string(),
                     score: hit.get("_score").and_then(|v| v.as_f64()),
                     source: hit.get("_source").cloned().unwrap_or(json!({})),
                 })
@@ -214,4 +227,3 @@ pub fn parse_search_result(response: Value) -> SearchResult {
         aggregations,
     }
 }
-

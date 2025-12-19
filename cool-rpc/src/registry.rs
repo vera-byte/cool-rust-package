@@ -79,5 +79,3 @@ pub mod handler {
         Router::with_path(path).get(rpc_services)
     }
 }
-
-

@@ -4,10 +4,10 @@
 //!
 //! 提供 RPC Service 的数据库操作能力，让 RPC Service 可以复用 cool-core 的 CRUD 功能。
 
+use async_trait::async_trait;
 use cool_core::entity::{DeleteParam, Id, ListQuery, PageQuery, QueryOption};
 use cool_core::error::{CoolResult, PageResult};
 use cool_core::service::ModifyType;
-use async_trait::async_trait;
 use sea_orm::DatabaseConnection;
 use serde_json::Value;
 
@@ -41,11 +41,7 @@ pub trait BaseRpcService: Send + Sync {
     async fn info(&self, id: Id, ignore_fields: Option<Vec<String>>) -> CoolResult<Option<Value>>;
 
     /// 分页查询
-    async fn page(
-        &self,
-        query: PageQuery,
-        option: QueryOption,
-    ) -> CoolResult<PageResult<Value>>;
+    async fn page(&self, query: PageQuery, option: QueryOption) -> CoolResult<PageResult<Value>>;
 
     /// 分页查询（带过滤参数）
     async fn page_with_filters(
@@ -74,4 +70,3 @@ pub trait BaseRpcService: Send + Sync {
         Ok(())
     }
 }
-

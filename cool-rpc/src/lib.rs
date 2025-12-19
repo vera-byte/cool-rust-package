@@ -30,19 +30,19 @@
 //! ```
 
 mod broker;
-mod service;
+mod debug;
 mod event;
 mod registry;
-mod debug;
-mod transaction;
+mod service;
 mod test;
+mod transaction;
 
 pub use broker::*;
-pub use service::*;
 pub use event::*;
 pub use registry::*;
-pub use transaction::*;
+pub use service::*;
 pub use test::*;
+pub use transaction::*;
 // 调试工具目前仅在某些场景使用，避免未使用导出产生警告
 // pub use debug::*;
 
@@ -59,14 +59,14 @@ pub mod prelude {
     };
     pub use crate::test::{RpcTest, RpcTestRequest, RpcTestResponse};
     pub use crate::transaction::{
-        global_transaction_manager, IsolationLevel, RpcTransactionManager, TransactionEvent,
-        TransactionEventHandler, TransactionOptions, register_transaction_handler,
+        global_transaction_manager, register_transaction_handler, IsolationLevel,
+        RpcTransactionManager, TransactionEvent, TransactionEventHandler, TransactionOptions,
     };
     pub use crate::RpcConfig;
     pub use async_trait::async_trait;
     pub use serde::{Deserialize, Serialize};
     pub use serde_json::json;
-    
+
     #[cfg(feature = "web")]
     pub use crate::test::handler::create_rpc_test_router;
 }
@@ -97,4 +97,3 @@ impl Default for RpcConfig {
         }
     }
 }
-

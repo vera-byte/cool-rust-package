@@ -16,7 +16,10 @@ pub struct CheckConfig {
 }
 
 /// 检查并替换单个配置文件
-pub async fn check_and_replace_file(config: &CheckConfig, base_dir: &PathBuf) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn check_and_replace_file(
+    config: &CheckConfig,
+    base_dir: &PathBuf,
+) -> Result<(), Box<dyn std::error::Error>> {
     let file_path = base_dir.join(&config.path);
 
     if !file_path.exists() {
@@ -60,4 +63,3 @@ pub async fn check() -> Result<(), Box<dyn std::error::Error>> {
 
     Ok(())
 }
-

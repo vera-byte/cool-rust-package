@@ -34,4 +34,3 @@ impl BaseService for SqliteService {
         self.inner.table_name()
     }
 }
-

@@ -89,7 +89,11 @@ pub trait Plugin: Send + Sync {
     }
 
     /// 调用插件方法
-    async fn invoke(&self, method: &str, _params: serde_json::Value) -> PluginResult<serde_json::Value> {
+    async fn invoke(
+        &self,
+        method: &str,
+        _params: serde_json::Value,
+    ) -> PluginResult<serde_json::Value> {
         Err(PluginError::MethodNotFound(method.to_string()))
     }
 
@@ -97,4 +101,3 @@ pub trait Plugin: Send + Sync {
     fn as_any(&self) -> &dyn Any;
     fn as_any_mut(&mut self) -> &mut dyn Any;
 }
-

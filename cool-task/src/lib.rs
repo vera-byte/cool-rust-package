@@ -31,17 +31,17 @@
 //! }
 //! ```
 
-mod queue;
-mod worker;
-mod scheduler;
-mod job;
 mod base;
+mod job;
+mod queue;
+mod scheduler;
+mod worker;
 
 pub use base::*;
-pub use queue::*;
-pub use worker::*;
-pub use scheduler::*;
 pub use job::*;
+pub use queue::*;
+pub use scheduler::*;
+pub use worker::*;
 
 /// 队列类型，对齐 TS 版本的 `type?: 'comm' | 'getter' | 'noworker' | 'single'`
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -113,4 +113,3 @@ impl Default for TaskConfig {
         }
     }
 }
-

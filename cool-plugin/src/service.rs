@@ -43,7 +43,7 @@ impl PluginService {
         // 创建一个新的注册表，实际使用时应该通过依赖注入共享同一个注册表
         Self::new(Arc::new(PluginRegistry::new()))
     }
-    
+
     /// 使用指定的注册表创建插件服务
     pub fn with_registry(registry: Arc<PluginRegistry>) -> Self {
         Self::new(registry)
@@ -163,10 +163,7 @@ impl PluginService {
     /// 获取指定钩子类型的插件
     pub fn get_by_hook(&self, hook: &str) -> Vec<PluginInfo> {
         let plugins = self.registry.get_by_hook(hook);
-        plugins
-            .iter()
-            .map(|p| p.read().info())
-            .collect()
+        plugins.iter().map(|p| p.read().info()).collect()
     }
 
     /// 重新初始化插件
@@ -189,11 +186,11 @@ impl PluginService {
     pub fn remove(&self, key: &str) -> PluginResult<()> {
         // 从注册表移除
         self.registry.remove(key);
-        
+
         // 清理配置和状态
         let mut configs = self.configs.write();
         configs.remove(key);
-        
+
         let mut statuses = self.statuses.write();
         statuses.remove(key);
 
@@ -215,4 +212,3 @@ static GLOBAL_PLUGIN_SERVICE: once_cell::sync::Lazy<PluginService> =
 pub fn global_plugin_service() -> &'static PluginService {
     &GLOBAL_PLUGIN_SERVICE
 }
-

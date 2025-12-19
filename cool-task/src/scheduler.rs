@@ -81,9 +81,7 @@ impl Scheduler {
     /// 获取所有定时任务
     pub fn list(&self) -> Vec<(String, ScheduledJob)> {
         let jobs = self.jobs.read();
-        jobs.iter()
-            .map(|(k, v)| (k.clone(), v.clone()))
-            .collect()
+        jobs.iter().map(|(k, v)| (k.clone(), v.clone())).collect()
     }
 
     /// 启动调度器
@@ -128,7 +126,10 @@ impl Scheduler {
                                 tracing::info!("触发定时任务: {} ({})", job.name, id);
 
                                 // 添加任务到队列
-                                if let Err(e) = queue.add(&job.name, job.data.clone(), job.options.clone()).await {
+                                if let Err(e) = queue
+                                    .add(&job.name, job.data.clone(), job.options.clone())
+                                    .await
+                                {
                                     tracing::error!("添加定时任务失败: {} - {}", id, e);
                                 }
                             }
@@ -155,4 +156,3 @@ impl Scheduler {
         *self.running.read()
     }
 }
-

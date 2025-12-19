@@ -26,9 +26,8 @@ pub mod events {
 pub type EventData = Arc<dyn Any + Send + Sync>;
 
 /// 事件处理器类型
-pub type EventHandler = Arc<
-    dyn Fn(EventData) -> Pin<Box<dyn Future<Output = ()> + Send>> + Send + Sync,
->;
+pub type EventHandler =
+    Arc<dyn Fn(EventData) -> Pin<Box<dyn Future<Output = ()> + Send>> + Send + Sync>;
 
 /// 事件管理器
 pub struct EventManager {
@@ -72,12 +71,12 @@ impl EventManager {
 
         // 调用注册的处理器：先复制一份处理器列表，避免在持有锁的情况下 `.await`
         let handlers_vec: Vec<EventHandler> = {
-        let handlers = self.handlers.read();
+            let handlers = self.handlers.read();
             handlers.get(event).cloned().unwrap_or_default()
         };
         for handler in handlers_vec {
-                let data_clone = Arc::clone(&data);
-                handler(data_clone).await;
+            let data_clone = Arc::clone(&data);
+            handler(data_clone).await;
         }
 
         // 广播事件
@@ -170,4 +169,3 @@ mod tests {
         assert!(*received.read());
     }
 }
-

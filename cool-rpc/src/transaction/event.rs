@@ -74,4 +74,3 @@ impl crate::event::RpcEventHandler for TransactionEventHandler {
 pub fn register_transaction_handler(rpc: &CoolRpc) {
     rpc.on("moleculer.transaction", TransactionEventHandler);
 }
-

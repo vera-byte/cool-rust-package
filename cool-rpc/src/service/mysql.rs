@@ -3,10 +3,10 @@
 //! 对应 TypeScript 版本的 `rpc/src/service/mysql.ts`
 
 use super::base::BaseRpcService;
+use async_trait::async_trait;
 use cool_core::entity::{DeleteParam, Id, ListQuery, PageQuery, QueryOption};
 use cool_core::error::{CoolError, CoolResult, PageResult};
 use cool_core::service::{BaseService, MySqlService};
-use async_trait::async_trait;
 use sea_orm::{ConnectionTrait, DatabaseBackend, DatabaseConnection};
 use serde_json::Value;
 use std::sync::Arc;
@@ -70,11 +70,7 @@ impl BaseRpcService for RpcMysqlService {
         self.inner.info(id, ignore_fields).await
     }
 
-    async fn page(
-        &self,
-        query: PageQuery,
-        option: QueryOption,
-    ) -> CoolResult<PageResult<Value>> {
+    async fn page(&self, query: PageQuery, option: QueryOption) -> CoolResult<PageResult<Value>> {
         self.inner.page(query, option).await
     }
 
@@ -99,4 +95,3 @@ impl BaseRpcService for RpcMysqlService {
         self.inner.execute(sql).await
     }
 }
-

@@ -174,4 +174,3 @@ impl std::fmt::Display for CoolValidateException {
 }
 
 impl std::error::Error for CoolValidateException {}
-

@@ -120,5 +120,3 @@ static GLOBAL_URL_TAG_STORE: OnceCell<UrlTagStore> = OnceCell::new();
 pub fn global_url_tag_store() -> &'static UrlTagStore {
     GLOBAL_URL_TAG_STORE.get_or_init(UrlTagStore::default)
 }
-
-

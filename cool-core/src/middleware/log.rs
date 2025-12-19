@@ -114,4 +114,3 @@ impl Handler for RequestLogMiddleware {
 pub fn request_log() -> RequestLogMiddleware {
     RequestLogMiddleware::new()
 }
-

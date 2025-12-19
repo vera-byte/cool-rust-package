@@ -1125,7 +1125,7 @@ pub fn cool_es_index(args: TokenStream, input: TokenStream) -> TokenStream {
             if let Some(pos) = part.find('=') {
                 let key = part[..pos].trim();
                 let value = part[pos + 1..].trim().trim_matches('"');
-                
+
                 match key {
                     "name" => index_name = Some(value.to_string()),
                     "shards" => {

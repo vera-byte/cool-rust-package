@@ -113,7 +113,9 @@ impl Handler for AuthorityMiddleware {
             }
             None => {
                 res.status_code(StatusCode::UNAUTHORIZED);
-                res.render(Json(CoolResponse::<()>::from_error(&CoolError::unauthorized())));
+                res.render(Json(CoolResponse::<()>::from_error(
+                    &CoolError::unauthorized(),
+                )));
                 ctrl.skip_rest();
                 return;
             }
@@ -148,4 +150,3 @@ impl Handler for AuthorityMiddleware {
 pub fn authority(config: AuthorityConfig) -> AuthorityMiddleware {
     AuthorityMiddleware::new(config)
 }
-

@@ -4,9 +4,9 @@
 //!
 //! 生成或清空 entities.ts 文件
 
+use glob::Pattern;
 use std::fs;
 use std::path::{Path, PathBuf};
-use glob::Pattern;
 
 const MODULES_PATH: &str = "src/modules";
 const OUTPUT_FILE: &str = "src/entities.ts";
@@ -45,7 +45,7 @@ pub fn generate_entities_file() -> Result<(), Box<dyn std::error::Error>> {
         // Rust 版本：使用 mod 声明而不是 import
         let module_name = format!("entity_{}", index);
         imports.push(format!("mod {};", module_name));
-        
+
         // 注意：Rust 的实体导出方式与 TypeScript 不同
         // 这里生成一个占位符，实际使用时需要手动调整
         exports.push(format!("    // {}", relative_path));
@@ -72,7 +72,10 @@ pub fn generate_entities_file() -> Result<(), Box<dyn std::error::Error>> {
 
     // 写入文件
     fs::write(&output_file, file_content)?;
-    println!("Entities file generated successfully: {}", output_file.display());
+    println!(
+        "Entities file generated successfully: {}",
+        output_file.display()
+    );
 
     Ok(())
 }
@@ -94,7 +97,10 @@ pub fn clear_entities_file() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     fs::write(&output_file, empty_content)?;
-    println!("Entities file cleared successfully: {}", output_file.display());
+    println!(
+        "Entities file cleared successfully: {}",
+        output_file.display()
+    );
 
     Ok(())
 }
@@ -137,4 +143,3 @@ fn find_entity_files_recursive(
 
     Ok(())
 }
-

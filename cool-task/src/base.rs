@@ -137,5 +137,3 @@ impl BaseQueue {
         self.queue.obliterate().await
     }
 }
-
-

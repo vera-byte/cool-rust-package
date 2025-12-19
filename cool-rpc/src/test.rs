@@ -62,7 +62,12 @@ impl RpcTest {
     pub async fn test(&self, request: RpcTestRequest) -> Result<RpcTestResponse, RpcError> {
         match self
             .rpc
-            .call(&request.name, &request.service, &request.method, request.params)
+            .call(
+                &request.name,
+                &request.service,
+                &request.method,
+                request.params,
+            )
             .await
         {
             Ok(data) => Ok(RpcTestResponse {
@@ -136,4 +141,3 @@ pub mod handler {
         }
     }
 }
-

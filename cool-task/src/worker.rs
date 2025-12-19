@@ -139,32 +139,47 @@ impl Worker {
 
                             // 设置超时
                             let timeout_duration = Duration::from_secs(job_clone.options.timeout);
-                            let result = tokio::time::timeout(
-                                timeout_duration,
-                                handler.handle(),
-                            )
-                            .await;
+                            let result =
+                                tokio::time::timeout(timeout_duration, handler.handle()).await;
 
                             match result {
                                 Ok(Ok(value)) => {
-                                    tracing::info!("任务完成: {} ({})", job_clone.name, job_clone.id);
+                                    tracing::info!(
+                                        "任务完成: {} ({})",
+                                        job_clone.name,
+                                        job_clone.id
+                                    );
                                     handler.on_completed(&value).await;
-                                    let _ = queue_clone.complete_job(&mut job_clone, Some(value)).await;
+                                    let _ =
+                                        queue_clone.complete_job(&mut job_clone, Some(value)).await;
                                 }
                                 Ok(Err(e)) => {
-                                    tracing::error!("任务失败: {} ({}) - {}", job_clone.name, job_clone.id, e);
+                                    tracing::error!(
+                                        "任务失败: {} ({}) - {}",
+                                        job_clone.name,
+                                        job_clone.id,
+                                        e
+                                    );
                                     handler.on_failed(&e).await;
-                                    let _ = queue_clone.fail_job(&mut job_clone, &e.to_string()).await;
+                                    let _ =
+                                        queue_clone.fail_job(&mut job_clone, &e.to_string()).await;
                                 }
                                 Err(_) => {
-                                    tracing::error!("任务超时: {} ({})", job_clone.name, job_clone.id);
-                                    let _ = queue_clone.fail_job(&mut job_clone, "任务执行超时").await;
+                                    tracing::error!(
+                                        "任务超时: {} ({})",
+                                        job_clone.name,
+                                        job_clone.id
+                                    );
+                                    let _ =
+                                        queue_clone.fail_job(&mut job_clone, "任务执行超时").await;
                                 }
                             }
                         }
                         None => {
                             tracing::error!("未找到任务处理器: {}", job_clone.name);
-                            let _ = queue_clone.fail_job(&mut job_clone, "未找到任务处理器").await;
+                            let _ = queue_clone
+                                .fail_job(&mut job_clone, "未找到任务处理器")
+                                .await;
                         }
                     }
                 });
@@ -185,4 +200,3 @@ impl Worker {
         *self.running.read()
     }
 }
-

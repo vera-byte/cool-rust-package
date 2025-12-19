@@ -197,4 +197,3 @@ pub trait JobHandlerFactory: Send + Sync {
     /// 获取任务名称
     fn name(&self) -> &'static str;
 }
-

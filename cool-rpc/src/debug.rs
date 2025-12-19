@@ -125,4 +125,3 @@ pub mod handler {
             .push(Router::with_path(emit_path).post(rpc_debug_emit))
     }
 }
-

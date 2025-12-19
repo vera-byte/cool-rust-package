@@ -49,10 +49,7 @@ impl PluginRegistry {
     /// 获取所有插件信息
     pub fn list(&self) -> Vec<PluginInfo> {
         let plugins = self.plugins.read();
-        plugins
-            .values()
-            .map(|p| p.read().info())
-            .collect()
+        plugins.values().map(|p| p.read().info()).collect()
     }
 
     /// 获取指定类型的插件
@@ -147,4 +144,3 @@ static GLOBAL_PLUGIN_REGISTRY: once_cell::sync::Lazy<PluginRegistry> =
 pub fn global_plugin_registry() -> &'static PluginRegistry {
     &GLOBAL_PLUGIN_REGISTRY
 }
-

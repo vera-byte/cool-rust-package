@@ -4,11 +4,11 @@
 //!
 //! 提供分布式事务支持，允许跨服务的事务传播。
 
-mod manager;
 mod event;
+mod manager;
 
-pub use manager::*;
 pub use event::*;
+pub use manager::*;
 
 /// 事务隔离级别
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -40,4 +40,3 @@ impl Default for TransactionOptions {
         }
     }
 }
-

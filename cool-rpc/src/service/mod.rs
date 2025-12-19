@@ -29,7 +29,11 @@ pub enum ServiceError {
 #[async_trait]
 pub trait RpcServiceHandler: Send + Sync {
     /// 调用服务方法
-    async fn call(&self, method: &str, params: serde_json::Value) -> Result<serde_json::Value, ServiceError>;
+    async fn call(
+        &self,
+        method: &str,
+        params: serde_json::Value,
+    ) -> Result<serde_json::Value, ServiceError>;
 }
 
 /// RPC 服务定义
@@ -68,4 +72,3 @@ pub use base::*;
 pub use mysql::*;
 pub use postgres::*;
 pub use sqlite::*;
-

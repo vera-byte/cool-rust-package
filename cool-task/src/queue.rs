@@ -33,7 +33,12 @@ impl Queue {
     }
 
     /// 添加任务
-    pub async fn add(&self, name: &str, data: serde_json::Value, options: JobOptions) -> JobResult<Job> {
+    pub async fn add(
+        &self,
+        name: &str,
+        data: serde_json::Value,
+        options: JobOptions,
+    ) -> JobResult<Job> {
         let job = Job::new(&self.name, name, data, options);
         let job_json = serde_json::to_string(&job)?;
 
@@ -46,18 +51,23 @@ impl Queue {
         // 根据是否延迟决定放入哪个队列
         if let Some(delay) = job.options.delay {
             let score = chrono::Utc::now().timestamp_millis() + delay as i64;
-            conn.zadd::<_, _, _, ()>(self.key("delayed"), &job.id, score).await?;
+            conn.zadd::<_, _, _, ()>(self.key("delayed"), &job.id, score)
+                .await?;
         } else {
             // 按优先级放入等待队列
             let score = -job.options.priority as f64;
-            conn.zadd::<_, _, _, ()>(self.key("waiting"), &job.id, score).await?;
+            conn.zadd::<_, _, _, ()>(self.key("waiting"), &job.id, score)
+                .await?;
         }
 
         Ok(job)
     }
 
     /// 批量添加任务
-    pub async fn add_bulk(&self, jobs: Vec<(String, serde_json::Value, JobOptions)>) -> JobResult<Vec<Job>> {
+    pub async fn add_bulk(
+        &self,
+        jobs: Vec<(String, serde_json::Value, JobOptions)>,
+    ) -> JobResult<Vec<Job>> {
         let mut results = Vec::new();
         for (name, data, options) in jobs {
             let job = self.add(&name, data, options).await?;
@@ -100,9 +110,7 @@ impl Queue {
         let waiting_key = self.key("waiting");
 
         // 移动到期的延迟任务到等待队列
-        let delayed_jobs: Vec<String> = conn
-            .zrangebyscore(&delayed_key, 0, now)
-            .await?;
+        let delayed_jobs: Vec<String> = conn.zrangebyscore(&delayed_key, 0, now).await?;
 
         for job_id in delayed_jobs {
             conn.zrem::<_, _, ()>(&delayed_key, &job_id).await?;
@@ -129,7 +137,11 @@ impl Queue {
     }
 
     /// 完成任务
-    pub async fn complete_job(&self, job: &mut Job, result: Option<serde_json::Value>) -> JobResult<()> {
+    pub async fn complete_job(
+        &self,
+        job: &mut Job,
+        result: Option<serde_json::Value>,
+    ) -> JobResult<()> {
         let mut conn = self.conn.clone();
 
         job.mark_completed(result);
@@ -138,7 +150,12 @@ impl Queue {
         // 从活跃队列移除
         conn.srem::<_, _, ()>(self.key("active"), &job.id).await?;
         // 添加到完成队列
-        conn.zadd::<_, _, _, ()>(self.key("completed"), &job.id, chrono::Utc::now().timestamp_millis()).await?;
+        conn.zadd::<_, _, _, ()>(
+            self.key("completed"),
+            &job.id,
+            chrono::Utc::now().timestamp_millis(),
+        )
+        .await?;
 
         Ok(())
     }
@@ -154,12 +171,18 @@ impl Queue {
             job.status = JobStatus::Waiting;
             self.update_job(job).await?;
             conn.srem::<_, _, ()>(self.key("active"), &job.id).await?;
-            conn.zadd::<_, _, _, ()>(self.key("waiting"), &job.id, 0).await?;
+            conn.zadd::<_, _, _, ()>(self.key("waiting"), &job.id, 0)
+                .await?;
         } else {
             // 移到失败队列
             self.update_job(job).await?;
             conn.srem::<_, _, ()>(self.key("active"), &job.id).await?;
-            conn.zadd::<_, _, _, ()>(self.key("failed"), &job.id, chrono::Utc::now().timestamp_millis()).await?;
+            conn.zadd::<_, _, _, ()>(
+                self.key("failed"),
+                &job.id,
+                chrono::Utc::now().timestamp_millis(),
+            )
+            .await?;
         }
 
         Ok(())
@@ -218,4 +241,3 @@ impl Queue {
         Ok(())
     }
 }
-

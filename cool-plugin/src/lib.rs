@@ -35,34 +35,39 @@
 //! }
 //! ```
 
+mod cache;
+mod constant;
+mod exception;
+mod hook;
+mod installer;
 mod plugin;
 mod registry;
-mod hook;
-mod upload;
 mod service;
-mod cache;
-mod exception;
-mod constant;
-mod installer;
+mod upload;
 
+pub use cache::*;
+pub use constant::*;
+pub use exception::*;
+pub use hook::*;
+pub use installer::*;
 pub use plugin::*;
 pub use registry::*;
-pub use hook::*;
-pub use upload::*;
 pub use service::*;
-pub use cache::*;
-pub use exception::*;
-pub use constant::*;
-pub use installer::*;
+pub use upload::*;
 
 /// 预导入模块
 pub mod prelude {
-    pub use crate::cache::{create_cache_store, CacheError, CacheOptions, CacheResult, FsCacheStore};
+    pub use crate::cache::{
+        create_cache_store, CacheError, CacheOptions, CacheResult, FsCacheStore,
+    };
     pub use crate::constant::{ErrInfo, Event, GlobalConfig, ResCode, ResMessage};
     pub use crate::exception::{
         BaseException, CoolCommException, CoolCoreException, CoolValidateException,
     };
     pub use crate::hook::{Hook, HookContext};
+    pub use crate::installer::{
+        CheckResult, InstallerError, InstallerResult, PluginData, PluginInstaller,
+    };
     pub use crate::plugin::{Plugin, PluginInfo, PluginResult, PluginStatus};
     pub use crate::registry::{global_plugin_registry, PluginRegistry};
     pub use crate::service::{global_plugin_service, PluginService};
@@ -70,9 +75,5 @@ pub mod prelude {
         LocalUploadHook, Mode, ModeType, PathValidator, UploadContext, UploadError, UploadHook,
         UploadResult,
     };
-    pub use crate::installer::{
-        CheckResult, InstallerError, InstallerResult, PluginData, PluginInstaller,
-    };
     pub use async_trait::async_trait;
 }
-

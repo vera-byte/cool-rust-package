@@ -201,13 +201,23 @@ impl QueryOption {
         self
     }
 
-    pub fn add_field_eq(mut self, column: impl Into<String>, request_param: impl Into<String>) -> Self {
-        self.field_eq.push(FieldCondition::with_param(column, request_param));
+    pub fn add_field_eq(
+        mut self,
+        column: impl Into<String>,
+        request_param: impl Into<String>,
+    ) -> Self {
+        self.field_eq
+            .push(FieldCondition::with_param(column, request_param));
         self
     }
 
-    pub fn add_field_like(mut self, column: impl Into<String>, request_param: impl Into<String>) -> Self {
-        self.field_like.push(FieldCondition::with_param(column, request_param));
+    pub fn add_field_like(
+        mut self,
+        column: impl Into<String>,
+        request_param: impl Into<String>,
+    ) -> Self {
+        self.field_like
+            .push(FieldCondition::with_param(column, request_param));
         self
     }
 
