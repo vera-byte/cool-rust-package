@@ -40,7 +40,9 @@ pub fn random_string(len: usize) -> String {
 pub fn random_number_string(len: usize) -> String {
     use rand::Rng;
     let mut rng = rand::rng();
-    (0..len).map(|_| rng.random_range(0..10).to_string()).collect()
+    (0..len)
+        .map(|_| rng.random_range(0..10).to_string())
+        .collect()
 }
 
 /// 驼峰转下划线
