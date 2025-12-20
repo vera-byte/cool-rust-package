@@ -1,5 +1,18 @@
 # 发布流程说明
 
+## 分支策略
+
+### dev 分支
+- ✅ **代码检查**：`cargo fmt`、`cargo clippy`
+- ✅ **构建测试**：`cargo build`、`cargo test`
+- ❌ **不执行**：自动创建 tag、发布到 crates.io
+
+### main/master 分支
+- ✅ **代码检查**：`cargo fmt`、`cargo clippy`
+- ✅ **构建测试**：`cargo build`、`cargo test`
+- ✅ **自动创建 tag**：根据 `Cargo.toml` 版本号自动创建 tag
+- ✅ **自动发布**：推送 tag 后自动发布到 crates.io
+
 ## 前置条件
 
 1. **设置 crates.io Token**
@@ -16,6 +29,8 @@
 
 ### 方式一：自动创建 Tag（推荐）✨
 
+> ⚠️ **注意**：自动创建 tag 功能只在 `main`/`master` 分支生效。`dev` 分支只会执行代码检查和测试。
+
 1. **更新版本号**
 
    在 `Cargo.toml` 中更新 workspace 版本：
@@ -25,12 +40,12 @@
    version = "0.1.0"  # 更新为新版本
    ```
 
-2. **提交并推送**
+2. **提交并推送到 main 分支**
 
    ```bash
    git add .
    git commit -m "chore: bump version to 0.1.0"
-   git push
+   git push origin main  # 推送到 main 分支
    ```
 
 3. **自动创建 Tag**
@@ -103,7 +118,7 @@ git push origin v0.1.0
 
 ### 工作原理
 
-当您推送代码到 `main`/`master`/`dev` 分支时：
+当您推送代码到 `main`/`master` 分支时（**不包括 dev 分支**）：
 
 1. **CI 检测版本变化**
    - 从 `Cargo.toml` 提取当前版本号
