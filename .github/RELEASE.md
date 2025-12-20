@@ -11,7 +11,41 @@
 - ✅ **代码检查**：`cargo fmt`、`cargo clippy`
 - ✅ **构建测试**：`cargo build`、`cargo test`
 - ✅ **自动创建 tag**：根据 `Cargo.toml` 版本号自动创建 tag
-- ✅ **自动发布**：推送 tag 后自动发布到 crates.io
+- ✅ **自动发布**：推送代码到 main/master 分支时自动发布到 crates.io
+
+## 跳过 CI
+
+在 main/master 分支提交时，可以通过在 commit message 中添加特殊标记来跳过 CI 执行：
+
+### 跳过所有 CI
+
+```bash
+git commit -m "docs: update README [skip ci]"
+# 或
+git commit -m "docs: update README [ci skip]"
+# 或
+git commit -m "docs: update README [no ci]"
+```
+
+### 只跳过自动创建 Tag
+
+```bash
+git commit -m "chore: update config [skip tag]"
+```
+
+### 只跳过发布
+
+```bash
+git commit -m "chore: update version [skip publish]"
+```
+
+### 支持的跳过标记
+
+- `[skip ci]` - 跳过所有 CI（包括代码检查、测试、tag、发布）
+- `[ci skip]` - 跳过所有 CI（同上）
+- `[no ci]` - 跳过所有 CI（同上）
+- `[skip tag]` - 只跳过自动创建 tag
+- `[skip publish]` - 只跳过发布到 crates.io
 
 ## 前置条件
 
@@ -48,13 +82,13 @@
    git push origin main  # 推送到 main 分支
    ```
 
-3. **自动创建 Tag**
+3. **自动创建 Tag 和发布**
 
    GitHub Actions 会自动：
    - ✅ 检测 `Cargo.toml` 中的版本号
    - ✅ 检查对应的 tag 是否已存在
    - ✅ 如果不存在，自动创建并推送 tag `v0.1.0`
-   - ✅ 推送 tag 后自动触发发布流程
+   - ✅ **直接发布到 crates.io**（无需等待 tag 推送）
 
    **无需手动操作！** 🎉
 

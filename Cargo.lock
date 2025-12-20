@@ -643,7 +643,7 @@ dependencies = [
 
 [[package]]
 name = "cool-core"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -673,7 +673,7 @@ dependencies = [
 
 [[package]]
 name = "cool-es"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -689,7 +689,7 @@ dependencies = [
 
 [[package]]
 name = "cool-macros"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "darling 0.23.0",
  "proc-macro2",
@@ -699,7 +699,7 @@ dependencies = [
 
 [[package]]
 name = "cool-plugin"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -719,7 +719,7 @@ dependencies = [
 
 [[package]]
 name = "cool-rpc"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -741,7 +741,7 @@ dependencies = [
 
 [[package]]
 name = "cool-task"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "async-trait",
