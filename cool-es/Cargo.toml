@@ -7,7 +7,7 @@ license.workspace = true
 description = "cool-admin Rust Elasticsearch 集成"
 
 [dependencies]
-cool-core = { path = "../cool-core" }
+cool-core.workspace = true
 
 # 异步
 tokio.workspace = true
@@ -27,4 +27,3 @@ anyhow.workspace = true
 # Elasticsearch
 elasticsearch = "8.5.0-alpha.1"
 url.workspace = true
-

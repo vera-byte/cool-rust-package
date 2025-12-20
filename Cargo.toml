@@ -81,10 +81,11 @@ quote = "1"
 syn = { version = "2", features = ["full", "parsing", "extra-traits"] }
 darling = "0.23.0"
 
-# 内部依赖
-cool-core = { path = "cool-core" }
-cool-macros = { path = "cool-macros" }
-cool-task = { path = "cool-task" }
-cool-rpc = { path = "cool-rpc" }
-cool-es = { path = "cool-es" }
-cool-plugin = { path = "cool-plugin" }
+# 内部依赖（定义版本和 path，自动跟随 workspace.package.version）
+# 注意：版本号需要手动与 workspace.package.version 保持一致
+cool-core = { path = "cool-core", version = "0.1.2" }
+cool-macros = { path = "cool-macros", version = "0.1.2" }
+cool-task = { path = "cool-task", version = "0.1.2" }
+cool-rpc = { path = "cool-rpc", version = "0.1.2" }
+cool-es = { path = "cool-es", version = "0.1.2" }
+cool-plugin = { path = "cool-plugin", version = "0.1.2" }

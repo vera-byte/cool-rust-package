@@ -7,7 +7,7 @@ license.workspace = true
 description = "cool-admin Rust 插件系统"
 
 [dependencies]
-cool-core = { path = "../cool-core" }
+cool-core.workspace = true
 
 # 异步
 tokio.workspace = true

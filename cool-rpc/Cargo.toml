@@ -10,7 +10,7 @@ description = "cool-admin Rust RPC 微服务"
 web = []
 
 [dependencies]
-cool-core = { path = "../cool-core" }
+cool-core.workspace = true
 
 # ORM（用于 RPC Service 数据库操作）
 sea-orm.workspace = true
@@ -42,4 +42,3 @@ once_cell.workspace = true
 
 # HTTP 客户端（用于 RPC 调用）
 reqwest = { version = "0.12", features = ["json"] }
-

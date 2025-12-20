@@ -7,7 +7,7 @@ license.workspace = true
 description = "cool-admin Rust 任务队列"
 
 [dependencies]
-cool-core = { path = "../cool-core" }
+cool-core.workspace = true
 
 # 异步
 tokio.workspace = true
@@ -34,4 +34,3 @@ parking_lot.workspace = true
 
 # Cron 表达式解析
 cron = "0.13"
-
