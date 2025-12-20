@@ -18,9 +18,10 @@ use std::path::Path;
 use thiserror::Error;
 
 /// 上传模式类型
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub enum ModeType {
     /// 本地存储
+    #[default]
     Local,
     /// OSS 存储
     Oss,
@@ -28,12 +29,6 @@ pub enum ModeType {
     Cos,
     /// 其他
     Other,
-}
-
-impl Default for ModeType {
-    fn default() -> Self {
-        Self::Local
-    }
 }
 
 /// 上传模式

@@ -51,6 +51,9 @@ pub struct ServiceNode {
 }
 
 /// RPC Broker
+type ServiceMap = HashMap<String, Arc<dyn RpcServiceHandler>>;
+type EventHandlerMap = HashMap<String, Vec<Arc<dyn RpcEventHandler>>>;
+
 pub struct CoolRpc {
     /// 配置
     config: RpcConfig,
@@ -59,9 +62,9 @@ pub struct CoolRpc {
     /// Redis 连接
     conn: MultiplexedConnection,
     /// 注册的服务
-    services: Arc<RwLock<HashMap<String, Box<dyn RpcServiceHandler>>>>,
+    services: Arc<RwLock<ServiceMap>>,
     /// 事件处理器
-    event_handlers: Arc<RwLock<HashMap<String, Vec<Box<dyn RpcEventHandler>>>>>,
+    event_handlers: Arc<RwLock<EventHandlerMap>>,
     /// 是否运行中
     running: Arc<RwLock<bool>>,
 }
@@ -91,7 +94,7 @@ impl CoolRpc {
     /// 注册服务
     pub fn register<S: RpcServiceHandler + 'static>(&self, name: &str, service: S) {
         let mut services = self.services.write();
-        services.insert(name.to_string(), Box::new(service));
+        services.insert(name.to_string(), Arc::new(service));
         tracing::info!("RPC 服务已注册: {}", name);
     }
 
@@ -101,7 +104,7 @@ impl CoolRpc {
         handlers
             .entry(event.to_string())
             .or_default()
-            .push(Box::new(handler));
+            .push(Arc::new(handler));
     }
 
     /// 调用远程服务
@@ -332,9 +335,12 @@ impl CoolRpc {
 
     /// 处理 RPC 请求
     pub async fn handle_request(&self, request: RpcRequest) -> RpcResponse {
-        let services = self.services.read();
+        let service = {
+            let services = self.services.read();
+            services.get(&request.service).cloned()
+        };
 
-        match services.get(&request.service) {
+        match service {
             Some(service) => match service.call(&request.method, request.params).await {
                 Ok(data) => RpcResponse {
                     success: true,

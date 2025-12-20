@@ -44,9 +44,10 @@ pub use scheduler::*;
 pub use worker::*;
 
 /// 队列类型，对齐 TS 版本的 `type?: 'comm' | 'getter' | 'noworker' | 'single'`
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum QueueType {
     /// 普通队列，带 Worker
+    #[default]
     Comm,
     /// 仅获取队列信息（对应 TS 的 getter）
     Getter,
@@ -54,12 +55,6 @@ pub enum QueueType {
     NoWorker,
     /// 单例队列（通常用于全局唯一任务）
     Single,
-}
-
-impl Default for QueueType {
-    fn default() -> Self {
-        QueueType::Comm
-    }
 }
 
 /// 队列配置，对齐 TS 版本 `CoolQueue` 装饰器的配置结构

@@ -4,10 +4,14 @@ use crate::plugin::{Plugin, PluginError, PluginInfo, PluginResult, PluginStatus}
 use parking_lot::RwLock;
 use std::collections::HashMap;
 use std::sync::Arc;
+use tokio::sync::Mutex;
+
+type PluginHandle = Arc<Mutex<Box<dyn Plugin>>>;
+type PluginMap = HashMap<String, PluginHandle>;
 
 /// 插件注册表
 pub struct PluginRegistry {
-    plugins: RwLock<HashMap<String, Arc<RwLock<Box<dyn Plugin>>>>>,
+    plugins: RwLock<PluginMap>,
 }
 
 impl PluginRegistry {
@@ -23,19 +27,19 @@ impl PluginRegistry {
         let key = info.key.clone();
 
         let mut plugins = self.plugins.write();
-        plugins.insert(key.clone(), Arc::new(RwLock::new(Box::new(plugin))));
+        plugins.insert(key.clone(), Arc::new(Mutex::new(Box::new(plugin))));
 
         tracing::info!("插件已注册: {} ({})", info.name, key);
     }
 
     /// 获取插件
-    pub fn get(&self, key: &str) -> Option<Arc<RwLock<Box<dyn Plugin>>>> {
+    pub fn get(&self, key: &str) -> Option<PluginHandle> {
         let plugins = self.plugins.read();
         plugins.get(key).cloned()
     }
 
     /// 移除插件
-    pub fn remove(&self, key: &str) -> Option<Arc<RwLock<Box<dyn Plugin>>>> {
+    pub fn remove(&self, key: &str) -> Option<PluginHandle> {
         let mut plugins = self.plugins.write();
         plugins.remove(key)
     }
@@ -49,15 +53,15 @@ impl PluginRegistry {
     /// 获取所有插件信息
     pub fn list(&self) -> Vec<PluginInfo> {
         let plugins = self.plugins.read();
-        plugins.values().map(|p| p.read().info()).collect()
+        plugins.values().map(|p| p.blocking_lock().info()).collect()
     }
 
     /// 获取指定类型的插件
-    pub fn get_by_hook(&self, hook: &str) -> Vec<Arc<RwLock<Box<dyn Plugin>>>> {
+    pub fn get_by_hook(&self, hook: &str) -> Vec<PluginHandle> {
         let plugins = self.plugins.read();
         plugins
             .values()
-            .filter(|p| p.read().info().hook == hook)
+            .filter(|p| p.blocking_lock().info().hook == hook)
             .cloned()
             .collect()
     }
@@ -70,10 +74,10 @@ impl PluginRegistry {
         };
 
         for plugin in plugins {
-            let key = plugin.read().info().key.clone();
+            let key = plugin.blocking_lock().info().key.clone();
             let config = configs.get(&key).cloned().unwrap_or_default();
 
-            let mut plugin = plugin.write();
+            let mut plugin = plugin.lock().await;
             plugin.init(config).await?;
         }
 
@@ -88,7 +92,7 @@ impl PluginRegistry {
         };
 
         for plugin in plugins {
-            let mut plugin = plugin.write();
+            let mut plugin = plugin.lock().await;
             plugin.ready().await?;
         }
 
@@ -103,7 +107,7 @@ impl PluginRegistry {
         };
 
         for plugin in plugins.into_iter().rev() {
-            let mut plugin = plugin.write();
+            let mut plugin = plugin.lock().await;
             plugin.destroy().await?;
         }
 
@@ -121,7 +125,7 @@ impl PluginRegistry {
             .get(key)
             .ok_or_else(|| PluginError::NotFound(key.to_string()))?;
 
-        let plugin = plugin.read();
+        let plugin = plugin.lock().await;
         if plugin.status() == PluginStatus::Disabled {
             return Err(PluginError::Disabled(key.to_string()));
         }

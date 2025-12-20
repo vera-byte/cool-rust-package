@@ -122,7 +122,7 @@ impl Scheduler {
                         // 检查是否应该在当前时间执行
                         if let Some(next) = schedule.upcoming(chrono::Utc).next() {
                             let diff = (next - now).num_seconds();
-                            if diff <= 1 && diff >= 0 {
+                            if (0..=1).contains(&diff) {
                                 tracing::info!("触发定时任务: {} ({})", job.name, id);
 
                                 // 添加任务到队列

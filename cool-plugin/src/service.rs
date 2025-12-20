@@ -9,6 +9,9 @@ use crate::registry::PluginRegistry;
 use parking_lot::RwLock;
 use std::collections::HashMap;
 use std::sync::Arc;
+use tokio::sync::Mutex;
+
+type PluginHandle = Arc<Mutex<Box<dyn Plugin>>>;
 
 /// 插件服务
 ///
@@ -93,7 +96,7 @@ impl PluginService {
     /// 对应 TypeScript 版本的 `getInstance`
     ///
     /// 注意：由于 Rust 的类型系统限制，这里返回的是插件的 Arc 引用
-    pub fn get_instance(&self, key: &str) -> PluginResult<Arc<RwLock<Box<dyn Plugin>>>> {
+    pub fn get_instance(&self, key: &str) -> PluginResult<PluginHandle> {
         // 检查插件状态
         self.check_status(key)?;
 
@@ -149,7 +152,7 @@ impl PluginService {
     /// 获取插件信息
     pub fn get_info(&self, key: &str) -> PluginResult<PluginInfo> {
         let plugin = self.get_instance(key)?;
-        let plugin = plugin.read();
+        let plugin = plugin.blocking_lock();
         Ok(plugin.info())
     }
 
@@ -163,7 +166,7 @@ impl PluginService {
     /// 获取指定钩子类型的插件
     pub fn get_by_hook(&self, hook: &str) -> Vec<PluginInfo> {
         let plugins = self.registry.get_by_hook(hook);
-        plugins.iter().map(|p| p.read().info()).collect()
+        plugins.iter().map(|p| p.blocking_lock().info()).collect()
     }
 
     /// 重新初始化插件
@@ -173,7 +176,7 @@ impl PluginService {
         let plugin = self.get_instance(key)?;
         let config = self.get_config(key).unwrap_or_default();
 
-        let mut plugin = plugin.write();
+        let mut plugin = plugin.lock().await;
         plugin.init(config).await?;
         plugin.ready().await?;
 
