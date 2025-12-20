@@ -25,7 +25,7 @@ jobs:
 
       # 2️⃣ 安装 Rust（使用 rust-toolchain.toml 指定的版本）
       - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain-file: rust-toolchain.toml
           components: rustfmt, clippy
@@ -138,9 +138,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2️⃣ 安装 Rust
+      # 2️⃣ 安装 Rust（使用 rust-toolchain.toml 指定的版本）
       - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain-file: rust-toolchain.toml
           components: rustfmt, clippy
