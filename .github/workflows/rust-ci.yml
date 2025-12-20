@@ -23,12 +23,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2️⃣ 安装 Rust（使用 rust-toolchain.toml 指定的版本）
+      # 2️⃣ 安装 Rust（自动检测 rust-toolchain.toml 指定的版本）
       - name: Install Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          toolchain-file: rust-toolchain.toml
           components: rustfmt, clippy
+          cache: true
 
       # 3️⃣ 缓存 Cargo（优化缓存策略）
       - name: Cache cargo registry
@@ -138,12 +138,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2️⃣ 安装 Rust（使用 rust-toolchain.toml 指定的版本）
+      # 2️⃣ 安装 Rust（自动检测 rust-toolchain.toml 指定的版本）
       - name: Install Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          toolchain-file: rust-toolchain.toml
           components: rustfmt, clippy
+          cache: true
 
       # 3️⃣ 缓存 Cargo
       - name: Cache cargo registry
