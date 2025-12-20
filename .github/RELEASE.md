@@ -14,6 +14,37 @@
 
 ## 发布步骤
 
+### 方式一：自动创建 Tag（推荐）✨
+
+1. **更新版本号**
+
+   在 `Cargo.toml` 中更新 workspace 版本：
+
+   ```toml
+   [workspace.package]
+   version = "0.1.0"  # 更新为新版本
+   ```
+
+2. **提交并推送**
+
+   ```bash
+   git add .
+   git commit -m "chore: bump version to 0.1.0"
+   git push
+   ```
+
+3. **自动创建 Tag**
+
+   GitHub Actions 会自动：
+   - ✅ 检测 `Cargo.toml` 中的版本号
+   - ✅ 检查对应的 tag 是否已存在
+   - ✅ 如果不存在，自动创建并推送 tag `v0.1.0`
+   - ✅ 推送 tag 后自动触发发布流程
+
+   **无需手动操作！** 🎉
+
+### 方式二：手动创建 Tag
+
 ### 1. 更新版本号
 
 在 `Cargo.toml` 中更新 workspace 版本：
@@ -33,6 +64,20 @@ git push
 
 ### 3. 创建版本标签
 
+#### 方式一：使用自动脚本（推荐）
+
+```bash
+# 自动从 Cargo.toml 提取版本号并创建 tag
+./scripts/create-tag.sh
+```
+
+脚本会自动：
+- 从 `Cargo.toml` 提取版本号
+- 创建格式为 `v{version}` 的 tag
+- 询问是否推送到远程仓库
+
+#### 方式二：手动创建标签
+
 ```bash
 # 创建并推送标签
 git tag v0.1.0
@@ -48,11 +93,42 @@ git push origin v0.1.0
 
 ### 4. 自动发布
 
-推送标签后，GitHub Actions 会自动：
+推送标签后（无论是自动创建还是手动创建），GitHub Actions 会自动：
 
 1. ✅ 运行构建和测试
 2. ✅ 按依赖顺序发布所有包到 crates.io
 3. ✅ 创建 GitHub Release
+
+## 自动 Tag 功能说明
+
+### 工作原理
+
+当您推送代码到 `main`/`master`/`dev` 分支时：
+
+1. **CI 检测版本变化**
+   - 从 `Cargo.toml` 提取当前版本号
+   - 检查对应的 tag（如 `v0.1.0`）是否已存在
+
+2. **自动创建 Tag**
+   - 如果 tag 不存在，自动创建并推送
+   - 如果 tag 已存在，跳过创建（避免重复）
+
+3. **触发发布流程**
+   - 推送 tag 后自动触发 `publish` job
+   - 自动发布到 crates.io 并创建 GitHub Release
+
+### 优势
+
+- 🚀 **零手动操作**：更新版本号并推送即可
+- 🔒 **安全可靠**：自动检查 tag 是否存在，避免重复
+- ⚡ **自动化流程**：从版本更新到发布全自动
+- 📝 **清晰标记**：自动创建的 tag 会标注 `[auto-created by CI]`
+
+### 注意事项
+
+- ⚠️ 自动创建 tag 只在推送代码到主分支时触发
+- ⚠️ 如果 tag 已存在，不会重复创建
+- ⚠️ 确保版本号格式正确（如 `0.1.0`），tag 格式为 `v0.1.0`
 
 ## 发布顺序
 
