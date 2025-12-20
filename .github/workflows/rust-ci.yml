@@ -3,8 +3,11 @@ name: Rust CI
 on:
   push:
     branches: ["main", "master", "dev"]
+    tags:
+      - "v*.*.*" # 匹配版本标签，如 v0.1.0
   pull_request:
     branches: ["main", "master", "dev"]
+  workflow_dispatch: # 允许手动触发
 
 env:
   CARGO_TERM_COLOR: always
@@ -20,13 +23,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2️⃣ 安装 Rust（稳定版）
+      # 2️⃣ 安装 Rust（使用 rust-toolchain.toml 指定的版本）
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
+          toolchain-file: rust-toolchain.toml
           components: rustfmt, clippy
 
-      # 3️⃣ 缓存 Cargo（非常重要，能快 5~10 倍）
+      # 3️⃣ 缓存 Cargo（优化缓存策略）
       - name: Cache cargo registry
         uses: actions/cache@v4
         with:
@@ -50,6 +54,109 @@ jobs:
       - name: Cargo build
         run: cargo build --workspace --all-targets
 
-      # 7️⃣ 运行测试（不启用需要 DB 的 feature）
+      # 7️⃣ 运行测试
       - name: Cargo test
-        run: cargo test --workspace
+        run: cargo test --workspace --no-fail-fast
+
+  publish:
+    name: Publish to crates.io
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    # 只在推送版本标签时触发（格式：v0.1.0）
+    if: startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push'
+    permissions:
+      contents: write
+
+    steps:
+      # 1️⃣ 拉取代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ 安装 Rust
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain-file: rust-toolchain.toml
+          components: rustfmt, clippy
+
+      # 3️⃣ 缓存 Cargo
+      - name: Cache cargo registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      # 4️⃣ 配置 Cargo 凭据
+      - name: Configure Cargo credentials
+        run: |
+          mkdir -p ~/.cargo
+          echo "[registry]" >> ~/.cargo/config.toml
+          echo 'token = "${{ secrets.CRATES_IO_TOKEN }}"' >> ~/.cargo/config.toml
+
+      # 5️⃣ 发布到 crates.io（按依赖顺序发布）
+      - name: Publish packages
+        run: |
+          set -e
+
+          # 发布函数：重试机制
+          publish_crate() {
+            local crate=$1
+            local max_attempts=3
+            local attempt=1
+            while [ $attempt -le $max_attempts ]; do
+              echo "发布 $crate (尝试 $attempt/$max_attempts)..."
+              if cargo publish -p "$crate" --token "${{ secrets.CRATES_IO_TOKEN }}"; then
+                echo "✅ $crate 发布成功"
+                sleep 15  # 等待 crates.io 索引更新
+                return 0
+              else
+                echo "❌ $crate 发布失败，等待重试..."
+                sleep 10
+                attempt=$((attempt + 1))
+              fi
+            done
+            echo "❌ $crate 发布失败，已达到最大重试次数"
+            return 1
+          }
+
+          # 第一层：无内部依赖的包
+          echo "📦 发布第一层：基础包"
+          publish_crate cool-macros
+          publish_crate cool-core
+
+          # 第二层：依赖 cool-core 的包（可以并行，但这里顺序发布更稳定）
+          echo "📦 发布第二层：依赖 cool-core 的包"
+          publish_crate cool-task
+          publish_crate cool-es
+          publish_crate cool-plugin
+          publish_crate cool-rpc
+
+          echo "✅ 所有包发布完成！"
+
+      # 6️⃣ 创建 GitHub Release
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: |
+            ## Release ${{ github.ref_name }}
+
+            ### Published Crates
+            - cool-macros
+            - cool-core
+            - cool-task
+            - cool-es
+            - cool-plugin
+            - cool-rpc
+
+            See [crates.io](https://crates.io/crates/cool-core) for details.
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
