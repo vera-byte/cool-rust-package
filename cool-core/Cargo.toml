@@ -15,6 +15,7 @@ cli = ["glob"]
 [dependencies]
 # Web 框架
 salvo.workspace = true
+salvo-oapi = { version = "0.72", features = ["chrono", "uuid", "url", "decimal"] }
 
 # ORM
 sea-orm.workspace = true

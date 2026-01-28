@@ -328,13 +328,34 @@ dependencies = [
 
 [[package]]
 name = "brotli"
+version = "6.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "74f7971dbd9326d58187408ab83117d8ac1bb9c17b085fdacd1cf2f598719b6b"
+dependencies = [
+ "alloc-no-stdlib",
+ "alloc-stdlib",
+ "brotli-decompressor 4.0.3",
+]
+
+[[package]]
+name = "brotli"
 version = "8.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4bd8b9603c7aa97359dbd97ecf258968c95f3adddd6db2f7e7a5bef101c84560"
 dependencies = [
  "alloc-no-stdlib",
  "alloc-stdlib",
- "brotli-decompressor",
+ "brotli-decompressor 5.0.0",
+]
+
+[[package]]
+name = "brotli-decompressor"
+version = "4.0.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a334ef7c9e23abf0ce748e8cd309037da93e606ad52eb372e4ce327a0dcfbdfd"
+dependencies = [
+ "alloc-no-stdlib",
+ "alloc-stdlib",
 ]
 
 [[package]]
@@ -386,7 +407,7 @@ dependencies = [
  "rand 0.9.2",
  "serde_bytes",
  "simdutf8",
- "thiserror",
+ "thiserror 2.0.17",
  "time",
  "uuid",
 ]
@@ -660,10 +681,11 @@ dependencies = [
  "redis",
  "regex",
  "salvo",
+ "salvo-oapi 0.72.4",
  "sea-orm",
  "serde",
  "serde_json",
- "thiserror",
+ "thiserror 2.0.17",
  "tokio",
  "tracing",
  "tracing-subscriber",
@@ -681,7 +703,7 @@ dependencies = [
  "elasticsearch",
  "serde",
  "serde_json",
- "thiserror",
+ "thiserror 2.0.17",
  "tokio",
  "tracing",
  "url",
@@ -710,7 +732,7 @@ dependencies = [
  "parking_lot",
  "serde",
  "serde_json",
- "thiserror",
+ "thiserror 2.0.17",
  "tokio",
  "tracing",
  "uuid",
@@ -733,7 +755,7 @@ dependencies = [
  "sea-orm",
  "serde",
  "serde_json",
- "thiserror",
+ "thiserror 2.0.17",
  "tokio",
  "tracing",
  "uuid",
@@ -752,7 +774,7 @@ dependencies = [
  "redis",
  "serde",
  "serde_json",
- "thiserror",
+ "thiserror 2.0.17",
  "tokio",
  "tracing",
  "uuid",
@@ -1781,7 +1803,7 @@ dependencies = [
  "once_cell",
  "rand 0.9.2",
  "ring",
- "thiserror",
+ "thiserror 2.0.17",
  "tinyvec",
  "tokio",
  "tracing",
@@ -1804,7 +1826,7 @@ dependencies = [
  "rand 0.9.2",
  "resolv-conf",
  "smallvec",
- "thiserror",
+ "thiserror 2.0.17",
  "tokio",
  "tracing",
 ]
@@ -2337,7 +2359,7 @@ checksum = "0a60bf300a990b2d1ebdde4228e873e8e4da40d834adbf5265f3da1457ede652"
 dependencies = [
  "libc",
  "neli",
- "thiserror",
+ "thiserror 2.0.17",
  "windows-sys 0.61.2",
 ]
 
@@ -2440,6 +2462,16 @@ name = "mime"
 version = "0.3.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6877bb514081ee2a7ff5ef9de3281f14a4dd4bceac4c09388074a6b5df8a139a"
+
+[[package]]
+name = "mime-infer"
+version = "3.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "91caed19dd472bc88bcd063571df18153529d49301a1918f4cf37f42332bee2e"
+dependencies = [
+ "mime",
+ "unicase",
+]
 
 [[package]]
 name = "mime-infer"
@@ -2554,7 +2586,7 @@ dependencies = [
  "stringprep",
  "strsim 0.11.1",
  "take_mut",
- "thiserror",
+ "thiserror 2.0.17",
  "tokio",
  "tokio-rustls",
  "tokio-util",
@@ -2645,6 +2677,18 @@ dependencies = [
  "quote",
  "serde",
  "syn 2.0.111",
+]
+
+[[package]]
+name = "nix"
+version = "0.29.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "71e2746dc3a24dd78b3cfcb7be93368c6de9963d30f43a6a73998a9cf4b17b46"
+dependencies = [
+ "bitflags 2.10.0",
+ "cfg-if",
+ "cfg_aliases",
+ "libc",
 ]
 
 [[package]]
@@ -3149,7 +3193,7 @@ dependencies = [
  "rustc-hash",
  "rustls",
  "socket2 0.6.1",
- "thiserror",
+ "thiserror 2.0.17",
  "tokio",
  "tracing",
  "web-time",
@@ -3170,7 +3214,7 @@ dependencies = [
  "rustls",
  "rustls-pki-types",
  "slab",
- "thiserror",
+ "thiserror 2.0.17",
  "tinyvec",
  "tracing",
  "web-time",
@@ -3705,9 +3749,9 @@ dependencies = [
  "salvo-cache",
  "salvo-cors",
  "salvo-jwt-auth",
- "salvo-oapi",
+ "salvo-oapi 0.85.0",
  "salvo-proxy",
- "salvo_core",
+ "salvo_core 0.85.0",
  "salvo_extra",
 ]
 
@@ -3719,7 +3763,7 @@ checksum = "f0ff78c7ddb7428f644b2b94b375452bdef4a2a08192ebe80242c55703d4f593"
 dependencies = [
  "bytes",
  "moka",
- "salvo_core",
+ "salvo_core 0.85.0",
  "tracing",
 ]
 
@@ -3730,7 +3774,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2d60f0a0c7681d02523bf9ae7eca3173b61a74e42b9b6c1cd959d01498a1259f"
 dependencies = [
  "bytes",
- "salvo_core",
+ "salvo_core 0.85.0",
  "tracing",
 ]
 
@@ -3746,12 +3790,40 @@ dependencies = [
  "hyper-rustls",
  "hyper-util",
  "jsonwebtoken",
- "salvo_core",
+ "salvo_core 0.85.0",
  "serde",
  "serde_json",
- "thiserror",
+ "thiserror 2.0.17",
  "tokio",
  "tracing",
+]
+
+[[package]]
+name = "salvo-oapi"
+version = "0.72.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c7758d2fc7acf656c6c862f34f2e12b31342baa34b831a3085ed854906b9291c"
+dependencies = [
+ "base64 0.22.1",
+ "bytes",
+ "chrono",
+ "futures-util",
+ "http 1.4.0",
+ "indexmap",
+ "inventory",
+ "mime-infer 3.0.0",
+ "parking_lot",
+ "regex",
+ "rust_decimal",
+ "salvo-oapi-macros 0.72.4",
+ "salvo_core 0.72.4",
+ "serde",
+ "serde_json",
+ "thiserror 1.0.69",
+ "tokio",
+ "tracing",
+ "url",
+ "uuid",
 ]
 
 [[package]]
@@ -3769,24 +3841,39 @@ dependencies = [
  "http 1.4.0",
  "indexmap",
  "inventory",
- "mime-infer",
+ "mime-infer 4.0.1",
  "parking_lot",
  "regex",
  "rust-embed",
  "rust_decimal",
- "salvo-oapi-macros",
- "salvo_core",
+ "salvo-oapi-macros 0.85.0",
+ "salvo_core 0.85.0",
  "serde",
  "serde_json",
  "serde_norway",
  "smallvec",
- "thiserror",
+ "thiserror 2.0.17",
  "time",
  "tokio",
  "tracing",
  "ulid",
  "url",
  "uuid",
+]
+
+[[package]]
+name = "salvo-oapi-macros"
+version = "0.72.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "84df843985902faa79e0e31838541804ba1aaf4d05cae1252571fde91dc6d9c1"
+dependencies = [
+ "proc-macro-crate",
+ "proc-macro2",
+ "proc-macro2-diagnostics",
+ "quote",
+ "regex",
+ "salvo-serde-util 0.72.4",
+ "syn 2.0.111",
 ]
 
 [[package]]
@@ -3800,7 +3887,7 @@ dependencies = [
  "proc-macro2-diagnostics",
  "quote",
  "regex",
- "salvo-serde-util",
+ "salvo-serde-util 0.85.0",
  "syn 2.0.111",
 ]
 
@@ -3818,9 +3905,20 @@ dependencies = [
  "local-ip-address",
  "percent-encoding",
  "reqwest 0.12.26",
- "salvo_core",
+ "salvo_core 0.85.0",
  "tokio",
  "tracing",
+]
+
+[[package]]
+name = "salvo-serde-util"
+version = "0.72.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a06ddf5a36d50190f982482af90259a5fe29ec041ad0e61df31410090f2e92ba"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.111",
 ]
 
 [[package]]
@@ -3836,13 +3934,61 @@ dependencies = [
 
 [[package]]
 name = "salvo_core"
+version = "0.72.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5a5f6962a39666781301f8ff2fb9a3873dc5f5d11348672cf3334b7393276a1e"
+dependencies = [
+ "async-trait",
+ "base64 0.22.1",
+ "brotli 6.0.0",
+ "bytes",
+ "cookie",
+ "encoding_rs",
+ "enumflags2",
+ "flate2",
+ "form_urlencoded",
+ "futures-channel",
+ "futures-util",
+ "headers",
+ "http 1.4.0",
+ "http-body-util",
+ "hyper 1.8.1",
+ "hyper-util",
+ "indexmap",
+ "mime",
+ "mime-infer 3.0.0",
+ "multer",
+ "multimap",
+ "nix 0.29.0",
+ "parking_lot",
+ "percent-encoding",
+ "pin-project",
+ "rand 0.8.5",
+ "regex",
+ "salvo_macros 0.72.4",
+ "serde",
+ "serde-xml-rs 0.6.0",
+ "serde_json",
+ "serde_urlencoded",
+ "sync_wrapper 1.0.2",
+ "tempfile",
+ "thiserror 1.0.69",
+ "tokio",
+ "tokio-util",
+ "tracing",
+ "url",
+ "zstd 0.13.3",
+]
+
+[[package]]
+name = "salvo_core"
 version = "0.85.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e4f710aaf46666f08b3cc4b8ad761e3a00d381a2abe7e2d6448d0f594be72ab7"
 dependencies = [
  "async-trait",
  "base64 0.22.1",
- "brotli",
+ "brotli 8.0.2",
  "bytes",
  "chardetng",
  "content_inspector",
@@ -3861,24 +4007,24 @@ dependencies = [
  "hyper-util",
  "indexmap",
  "mime",
- "mime-infer",
+ "mime-infer 4.0.1",
  "multer",
  "multimap",
- "nix",
+ "nix 0.30.1",
  "parking_lot",
  "percent-encoding",
  "pin-project",
  "rand 0.9.2",
  "regex",
  "rustls-pemfile 2.2.0",
- "salvo_macros",
+ "salvo_macros 0.85.0",
  "serde",
- "serde-xml-rs",
+ "serde-xml-rs 0.8.2",
  "serde_json",
  "serde_urlencoded",
  "sync_wrapper 1.0.2",
  "tempfile",
- "thiserror",
+ "thiserror 2.0.17",
  "tokio",
  "tokio-rustls",
  "tokio-util",
@@ -3899,7 +4045,7 @@ dependencies = [
  "http-body-util",
  "hyper 1.8.1",
  "pin-project",
- "salvo_core",
+ "salvo_core 0.85.0",
  "serde",
  "serde_json",
  "tokio",
@@ -3907,6 +4053,20 @@ dependencies = [
  "tower",
  "tracing",
  "ulid",
+]
+
+[[package]]
+name = "salvo_macros"
+version = "0.72.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "84549ee77bca8a611329ffcf0d849d2474ad484aa60171a0757fcb07169b978e"
+dependencies = [
+ "proc-macro-crate",
+ "proc-macro2",
+ "quote",
+ "regex",
+ "salvo-serde-util 0.72.4",
+ "syn 2.0.111",
 ]
 
 [[package]]
@@ -3919,7 +4079,7 @@ dependencies = [
  "proc-macro2",
  "quote",
  "regex",
- "salvo-serde-util",
+ "salvo-serde-util 0.85.0",
  "syn 2.0.111",
 ]
 
@@ -3983,7 +4143,7 @@ dependencies = [
  "serde_json",
  "sqlx",
  "strum",
- "thiserror",
+ "thiserror 2.0.17",
  "time",
  "tracing",
  "url",
@@ -4125,13 +4285,25 @@ dependencies = [
 
 [[package]]
 name = "serde-xml-rs"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fb3aa78ecda1ebc9ec9847d5d3aba7d618823446a049ba2491940506da6e2782"
+dependencies = [
+ "log",
+ "serde",
+ "thiserror 1.0.69",
+ "xml-rs",
+]
+
+[[package]]
+name = "serde-xml-rs"
 version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cc2215ce3e6a77550b80a1c37251b7d294febaf42e36e21b7b411e0bf54d540d"
 dependencies = [
  "log",
  "serde",
- "thiserror",
+ "thiserror 2.0.17",
  "xml",
 ]
 
@@ -4330,7 +4502,7 @@ checksum = "297f631f50729c8c99b84667867963997ec0b50f32b2a7dbcab828ef0541e8bb"
 dependencies = [
  "num-bigint",
  "num-traits",
- "thiserror",
+ "thiserror 2.0.17",
  "time",
 ]
 
@@ -4432,7 +4604,7 @@ dependencies = [
  "serde_json",
  "sha2",
  "smallvec",
- "thiserror",
+ "thiserror 2.0.17",
  "time",
  "tokio",
  "tokio-stream",
@@ -4520,7 +4692,7 @@ dependencies = [
  "smallvec",
  "sqlx-core",
  "stringprep",
- "thiserror",
+ "thiserror 2.0.17",
  "time",
  "tracing",
  "uuid",
@@ -4563,7 +4735,7 @@ dependencies = [
  "smallvec",
  "sqlx-core",
  "stringprep",
- "thiserror",
+ "thiserror 2.0.17",
  "time",
  "tracing",
  "uuid",
@@ -4590,7 +4762,7 @@ dependencies = [
  "serde",
  "serde_urlencoded",
  "sqlx-core",
- "thiserror",
+ "thiserror 2.0.17",
  "time",
  "tracing",
  "url",
@@ -4773,11 +4945,31 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
+version = "1.0.69"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b6aaf5339b578ea85b50e080feb250a3e8ae8cfcdff9a461c9ec2904bc923f52"
+dependencies = [
+ "thiserror-impl 1.0.69",
+]
+
+[[package]]
+name = "thiserror"
 version = "2.0.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f63587ca0f12b72a0600bcba1d40081f830876000bb46dd2337a3051618f4fc8"
 dependencies = [
- "thiserror-impl",
+ "thiserror-impl 2.0.17",
+]
+
+[[package]]
+name = "thiserror-impl"
+version = "1.0.69"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4fee6c4efc90059e10f81e6d42c60a18f76588c3d74cb83a0b242a2b6c7504c1"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.111",
 ]
 
 [[package]]
@@ -5104,7 +5296,7 @@ dependencies = [
  "bytes",
  "log",
  "rand 0.9.2",
- "thiserror",
+ "thiserror 2.0.17",
  "utf-8",
 ]
 
@@ -5812,6 +6004,12 @@ name = "xml"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2df5825faced2427b2da74d9100f1e2e93c533fff063506a81ede1cf517b2e7e"
+
+[[package]]
+name = "xml-rs"
+version = "0.8.28"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3ae8337f8a065cfc972643663ea4279e04e7256de865aa66fe25cec5fb912d3f"
 
 [[package]]
 name = "xxhash-rust"

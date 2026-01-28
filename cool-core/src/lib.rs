@@ -232,3 +232,10 @@ impl Default for CoolApp {
         Self::new(config::CoolConfig::default())
     }
 }
+
+/// 测试处理函数
+#[salvo::handler]
+async fn test_handler(_req: &mut salvo::Request, _res: &mut salvo::Response) {
+    use salvo::writing::Text;
+    _res.render(Text::Plain("Hello from test endpoint"));
+}

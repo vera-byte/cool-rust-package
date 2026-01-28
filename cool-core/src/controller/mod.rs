@@ -7,6 +7,7 @@ use crate::error::{CoolError, CoolResponse, CoolResult};
 use crate::service::BaseService;
 use salvo::prelude::*;
 use serde_json::Value;
+use std::sync::Arc;
 
 /// CRUD API 类型
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -92,18 +93,23 @@ impl CrudHandler {
 }
 
 /// 从 Depot 中获取通用 CRUD Service
-fn get_crud_service(depot: &Depot) -> CoolResult<&dyn BaseService> {
-    if let Ok(svc) = depot.get::<&'static dyn BaseService>("crud_service") {
-        Ok(*svc)
-    } else {
-        Err(CoolError::comm(
-            "未找到 CRUD 服务实例，请先在 Depot 中注册 `crud_service`",
-        ))
+fn get_crud_service(depot: &Depot) -> CoolResult<std::sync::Arc<dyn BaseService + Send + Sync>> {
+    tracing::debug!("尝试从 Depot 获取 CRUD 服务");
+    match depot.obtain::<std::sync::Arc<dyn BaseService + Send + Sync>>() {
+        Ok(svc) => {
+            tracing::debug!("成功获取 CRUD 服务");
+            Ok(svc.clone())
+        }
+        Err(e) => {
+            tracing::debug!("获取 CRUD 服务失败: {:?}", e);
+            Err(CoolError::comm(
+                "未找到 CRUD 服务实例，请先在 Depot 中注册 `crud_service`",
+            ))
+        }
     }
 }
 
 /// 新增接口
-#[handler]
 pub async fn handle_add(req: &mut Request, res: &mut Response, depot: &mut Depot) {
     let body: Value = match req.parse_json().await {
         Ok(v) => v,
@@ -128,7 +134,6 @@ pub async fn handle_add(req: &mut Request, res: &mut Response, depot: &mut Depot
 }
 
 /// 删除接口
-#[handler]
 pub async fn handle_delete(req: &mut Request, res: &mut Response, depot: &mut Depot) {
     let param: DeleteParam = match req.parse_json().await {
         Ok(v) => v,
@@ -153,7 +158,6 @@ pub async fn handle_delete(req: &mut Request, res: &mut Response, depot: &mut De
 }
 
 /// 修改接口
-#[handler]
 pub async fn handle_update(req: &mut Request, res: &mut Response, depot: &mut Depot) {
     let body: Value = match req.parse_json().await {
         Ok(v) => v,
@@ -178,7 +182,6 @@ pub async fn handle_update(req: &mut Request, res: &mut Response, depot: &mut De
 }
 
 /// 分页查询接口
-#[handler]
 pub async fn handle_page(req: &mut Request, res: &mut Response, depot: &mut Depot) {
     let query: PageQuery = req.parse_queries().unwrap_or_default();
 
@@ -200,7 +203,6 @@ pub async fn handle_page(req: &mut Request, res: &mut Response, depot: &mut Depo
 }
 
 /// 详情查询接口
-#[handler]
 pub async fn handle_info(req: &mut Request, res: &mut Response, depot: &mut Depot) {
     let id: Option<i64> = req.query("id").and_then(|s: &str| s.parse::<i64>().ok());
 
@@ -228,7 +230,6 @@ pub async fn handle_info(req: &mut Request, res: &mut Response, depot: &mut Depo
 }
 
 /// 列表查询接口
-#[handler]
 pub async fn handle_list(req: &mut Request, res: &mut Response, depot: &mut Depot) {
     let query: ListQuery = req.parse_queries().unwrap_or_default();
 
@@ -249,31 +250,129 @@ pub async fn handle_list(req: &mut Request, res: &mut Response, depot: &mut Depo
     }
 }
 
-/// 构建 CRUD 路由
+/// CRUD 服务中间件
 ///
-/// 根据控制器配置自动生成路由
-pub fn build_crud_router(prefix: &str, apis: &[CrudApi]) -> Router {
+/// 将服务注入到 Depot 中供 CRUD handlers 使用
+pub struct CrudServiceMiddleware {
+    pub service: std::sync::Arc<dyn BaseService + Send + Sync>,
+}
+
+impl CrudServiceMiddleware {
+    pub fn new(service: std::sync::Arc<dyn BaseService + Send + Sync>) -> Self {
+        Self { service }
+    }
+}
+
+#[async_trait]
+impl Handler for CrudServiceMiddleware {
+    async fn handle(
+        &self,
+        _req: &mut Request,
+        _depot: &mut Depot,
+        _res: &mut Response,
+        _ctrl: &mut FlowCtrl,
+    ) {
+        // 将服务注入到 Depot 中
+        tracing::debug!("注入 CRUD 服务到 Depot");
+        _depot.inject(self.service.clone());
+        _ctrl.call_next(_req, _depot, _res).await;
+    }
+}
+
+/// 带 OpenAPI 注解的新增处理函数
+#[salvo::handler]
+pub async fn handle_add_with_oapi(req: &mut Request, res: &mut Response, depot: &mut Depot) {
+    handle_add(req, res, depot).await;
+}
+
+/// 带 OpenAPI 注解的删除处理函数
+#[salvo::handler]
+pub async fn handle_delete_with_oapi(req: &mut Request, res: &mut Response, depot: &mut Depot) {
+    handle_delete(req, res, depot).await;
+}
+
+/// 带 OpenAPI 注解的更新处理函数
+#[salvo::handler]
+pub async fn handle_update_with_oapi(req: &mut Request, res: &mut Response, depot: &mut Depot) {
+    handle_update(req, res, depot).await;
+}
+
+/// 带 OpenAPI 注解的分页处理函数
+#[salvo::handler]
+pub async fn handle_page_with_oapi(req: &mut Request, res: &mut Response, depot: &mut Depot) {
+    handle_page(req, res, depot).await;
+}
+
+/// 带 OpenAPI 注解的详情处理函数
+#[salvo::handler]
+pub async fn handle_info_with_oapi(req: &mut Request, res: &mut Response, depot: &mut Depot) {
+    handle_info(req, res, depot).await;
+}
+
+/// 带 OpenAPI 注解的列表处理函数
+#[salvo::handler]
+pub async fn handle_list_with_oapi(req: &mut Request, res: &mut Response, depot: &mut Depot) {
+    handle_list(req, res, depot).await;
+}
+
+/// 构建带有 OpenAPI 注解的 CRUD 路由（使用 Arc<dyn BaseService>）
+///
+/// 此函数会自动为所有 CRUD 操作添加 OpenAPI 注解
+pub fn build_crud_router_with_arc(
+    service: Arc<dyn BaseService + Send + Sync>,
+    option: &ControllerOption,
+) -> Router {
+    let prefix = option.prefix.as_deref().unwrap_or("/");
     let mut router = Router::with_path(prefix);
 
-    for api in apis {
+    // 添加服务中间件
+    let middleware = CrudServiceMiddleware { service };
+    router = router.hoop(middleware);
+
+    // 为每个 API 添加路由和 OpenAPI 注解
+    for api in &option.api {
         match api {
             CrudApi::Add => {
-                router = router.push(Router::with_path("add").post(handle_add));
+                router = router.push(
+                    Router::with_path("add")
+                        .post(handle_add_with_oapi)
+                        .oapi_tag("商品管理"),
+                );
             }
             CrudApi::Delete => {
-                router = router.push(Router::with_path("delete").post(handle_delete));
+                router = router.push(
+                    Router::with_path("delete")
+                        .post(handle_delete_with_oapi)
+                        .oapi_tag("商品管理"),
+                );
             }
             CrudApi::Update => {
-                router = router.push(Router::with_path("update").post(handle_update));
+                router = router.push(
+                    Router::with_path("update")
+                        .post(handle_update_with_oapi)
+                        .oapi_tag("商品管理"),
+                );
             }
             CrudApi::Page => {
-                router = router.push(Router::with_path("page").post(handle_page));
+                router = router.push(
+                    Router::with_path("page")
+                        .post(handle_page_with_oapi)
+                        .oapi_tag("商品管理"),
+                );
             }
             CrudApi::Info => {
-                router = router.push(Router::with_path("info").get(handle_info));
+                router = router.push(
+                    Router::with_path("info")
+                        .get(handle_info_with_oapi)
+                        .oapi_tag("商品管理"),
+                );
             }
             CrudApi::List => {
-                router = router.push(Router::with_path("list").post(handle_list));
+                router = router.push(
+                    Router::with_path("list")
+                        .post(handle_list_with_oapi)
+                        .oapi_tag("商品管理"),
+                );
             }
         }
     }

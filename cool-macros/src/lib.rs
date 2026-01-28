@@ -8,8 +8,6 @@
 //! - `#[cool_entity]` - 自动实现实体 trait
 //! - `#[cool_service]` - 自动实现服务 trait
 //! - `#[controller]` - 标记控制器（等价于 @Provide）
-//! - `#[post]` - POST 路由装饰器
-//! - `#[get]` - GET 路由装饰器
 //! - `#[ignore_auth]` - 忽略认证装饰器
 
 use darling::{ast, FromDeriveInput, FromField};
@@ -128,7 +126,15 @@ pub fn cool_controller(args: TokenStream, input: TokenStream) -> TokenStream {
     let expanded = quote! {
         #input
 
+        #[allow(dead_code)]
         impl #struct_name {
+            /// 创建控制器实例
+            pub fn new(service: impl cool_core::service::BaseService + Send + Sync + 'static) -> Self {
+                Self {
+                    service: std::sync::Arc::new(service),
+                }
+            }
+
             /// 获取控制器配置
             ///
             /// 对应 TS 版本的 `@CoolController` 装饰器参数
@@ -143,12 +149,18 @@ pub fn cool_controller(args: TokenStream, input: TokenStream) -> TokenStream {
             /// 构建路由（使用通用的 build_crud_router）
             ///
             /// 注意：此方法需要配合中间件注入 BaseService 到 Depot
-            pub fn router(&self) -> salvo::Router {
+            /// 构建路由并注入服务（推荐使用此方法）
+            ///
+            /// 此方法会自动注入服务中间件到路由中，并生成带有 OpenAPI 注解的路由
+            pub fn router_with_service(
+                &self,
+                service: std::sync::Arc<dyn cool_core::service::BaseService + Send + Sync>,
+            ) -> salvo::Router {
+                use cool_core::controller::{build_crud_router_with_arc, CrudApi, ControllerOption};
+
                 let option = Self::controller_option();
-                cool_core::controller::build_crud_router(
-                    option.prefix.as_deref().unwrap_or(#prefix),
-                    &option.api,
-                )
+                let router = build_crud_router_with_arc(service, &option);
+                router
             }
         }
     };
